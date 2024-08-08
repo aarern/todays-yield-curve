@@ -17,6 +17,11 @@ Steps to setting up the Excel file:
 10. Don't change the name of the file or the worksheets
 
 Steps to setting up the code:
+*install necessary pips* 
+1. pip install selenium webdriver-manager
+2. install pandas 
+3. pip install xlsxwriter
+
 1. Save the file down in the same location as the Excel file
 2. Copy the location of the Excel file in the folder (in the file explorer highlight the Excel file then hit (Ctrl Shift C) to copy the location)
 3. Open the coding environment
