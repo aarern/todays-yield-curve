@@ -19,7 +19,7 @@ Steps to setting up the code:
 1. Save the file down with the Excel file
 2. Copy the location of the Excel file in the folder (in the file explorer highlight the Excel file then hit (Ctrl Shift C) to copy the location)
 3. Open the coding environment
-4. Go to ln 122
+4. Go to ln 123
 5. Replace the r"" with the location of the Excel file
 6. Ensure only one set of quotes is around the location
 7. Save
