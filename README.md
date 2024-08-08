@@ -14,6 +14,7 @@ Steps to setting up the Excel file:
 7. Locate the folder the Excel file is in and hit "OK"
 8. Check the box that says "Subfolders of this location are also trusted"
 9. Hit "OK"
+10. Don't change the name of the file or the worksheets
 
 Steps to setting up the code:
 1. Save the file down with the Excel file
