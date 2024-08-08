@@ -24,4 +24,4 @@ Steps to setting up the code:
 5. Replace the r"" with the location of the Excel file
 6. Ensure only one set of quotes is around the location
 7. Save
-8. Run
+8. Run the script every time you need to update the yield curve)
