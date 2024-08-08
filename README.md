@@ -17,11 +17,12 @@ Steps to setting up the Excel file:
 10. Don't change the name of the file or the worksheets
 
 Steps to setting up the code:
-1. Save the file down with the Excel file
+1. Save the file down in the same location as the Excel file
 2. Copy the location of the Excel file in the folder (in the file explorer highlight the Excel file then hit (Ctrl Shift C) to copy the location)
 3. Open the coding environment
 4. Go to ln 123
 5. Replace the r"" with the location of the Excel file
 6. Ensure only one set of quotes is around the location
 7. Save
-8. Run the script every time you need to update the yield curve)
+8. Make sure the Excel file is not open when you run the script otherwise it won't work
+9. Run the script every time you need to update the yield curve
