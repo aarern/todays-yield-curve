@@ -1,0 +1,140 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import pandas as pd
+import re
+import openpyxl
+import os
+from datetime import datetime
+
+# Setup Selenium WebDriver
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Run in headless mode
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# Open the website
+driver.get("https://ustreasuries.online/")
+
+# Initialize lists for the DataFrame
+dates = []
+values_1M = []
+values_3M = []
+values_6M = []
+values_1Y = []
+values_2Y = []
+values_3Y = []
+values_5Y = []
+values_7Y = []
+values_10Y = []
+values_20Y = []
+values_30Y = []
+
+# Wait until the grid data is fully loaded
+try:
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="business_date_js"]'))
+    )
+
+    # Find all elements for each column
+    date_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="business_date_js"]')
+    value_1M_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="1M"]')
+    value_3M_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="3M"]')
+    value_6M_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="6M"]')
+    value_1Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="1Y"]')
+    value_2Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="2Y"]')
+    value_3Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="3Y"]')
+    value_5Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="5Y"]')
+    value_7Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="7Y"]')
+    value_10Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="10Y"]')
+    value_20Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="20Y"]')
+    value_30Y_elements = driver.find_elements(By.CSS_SELECTOR, 'div[tabindex="-1"][role="gridcell"][col-id="30Y"]')
+
+    # Define a regular expression to match dates in the format MM/DD/YYYY
+    date_pattern = re.compile(r'\d{2}/\d{2}/\d{4}')
+
+    # Extract and filter dates and values
+    for date_element, value_1M_element, value_3M_element, value_6M_element, value_1Y_element, value_2Y_element, value_3Y_element, value_5Y_element, value_7Y_element, value_10Y_element, value_20Y_element, value_30Y_element in zip(
+        date_elements, value_1M_elements, value_3M_elements, value_6M_elements, value_1Y_elements, value_2Y_elements, value_3Y_elements, value_5Y_elements, value_7Y_elements, value_10Y_elements, value_20Y_elements, value_30Y_elements
+    ):
+        date_text = date_element.text.strip()
+        value_1M_text = value_1M_element.text.strip()
+        value_3M_text = value_3M_element.text.strip()
+        value_6M_text = value_6M_element.text.strip()
+        value_1Y_text = value_1Y_element.text.strip()
+        value_2Y_text = value_2Y_element.text.strip()
+        value_3Y_text = value_3Y_element.text.strip()
+        value_5Y_text = value_5Y_element.text.strip()
+        value_7Y_text = value_7Y_element.text.strip()
+        value_10Y_text = value_10Y_element.text.strip()
+        value_20Y_text = value_20Y_element.text.strip()
+        value_30Y_text = value_30Y_element.text.strip()
+
+        if date_pattern.match(date_text):
+            # Append the date as a string directly
+            dates.append(date_text)
+            values_1M.append(value_1M_text)
+            values_3M.append(value_3M_text)
+            values_6M.append(value_6M_text)
+            values_1Y.append(value_1Y_text)
+            values_2Y.append(value_2Y_text)
+            values_3Y.append(value_3Y_text)
+            values_5Y.append(value_5Y_text)
+            values_7Y.append(value_7Y_text)
+            values_10Y.append(value_10Y_text)
+            values_20Y.append(value_20Y_text)
+            values_30Y.append(value_30Y_text)
+
+    # Create the DataFrame
+    df = pd.DataFrame({
+        "Date": pd.to_datetime(dates, format='%m/%d/%Y'),
+        "1M": values_1M,
+        "3M": values_3M,
+        "6M": values_6M,
+        "1Y": values_1Y,
+        "2Y": values_2Y,
+        "3Y": values_3Y,
+        "5Y": values_5Y,
+        "7Y": values_7Y,
+        "10Y": values_10Y,
+        "20Y": values_20Y,
+        "30Y": values_30Y
+    })
+
+    # Format the 'Date' column as "mm/dd/yyyy"
+    df['Date'] = df['Date'].dt.strftime('Yield Curve as of %m/%d/%Y')
+
+    # Convert all other columns to numeric values
+    for col in df.columns[1:]:
+        df[col] = pd.to_numeric(df[col].str.replace('%', '').str.replace(',', ''), errors='coerce')
+
+    # Find the row with the most recent date
+    most_recent_date = df['Date'].max()
+    df_recent = df[df['Date'] == most_recent_date]
+
+    # Remove the index
+    df_recent = df_recent.reset_index(drop=True)
+    
+    # Define the path and file name to Excel files
+    file_path = r""
+
+    # Save the DataFrame to the Excel file
+    try:
+        if os.path.exists(file_path):
+            with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+                df_recent.to_excel(writer, sheet_name='Scrape Output', index=False)
+        else:
+            with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+                df_recent.to_excel(writer, sheet_name='Scrape Output', index=False)
+        print("Data uploaded successfully")
+    except Exception as e:
+        print("Data was not uploaded")
+        print(f"Error: {e}")
+
+finally:
+    # Close the browser
+    driver.quit()
