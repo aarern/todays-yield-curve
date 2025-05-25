@@ -1,8 +1,10 @@
-# todays-yield-curve
+# Today's Yield Curve
 
-This exercise pulls in the most recent treasury rates available for free online instead of paying for an API and then uploads to an Excel file creates a yield curve and then describes its slope. The slope of the yield curve is calculated by comparing the 10 Year Treasury to the 1 Year Treasury and comparing the delta to different measurements to describe the shape of the slope. 
+This exercise pulls in the most recent treasury rates available for free online instead of paying for an API and then uploads to an Excel file, creates a yield curve, and then describes its slope. The slope of the yield curve is calculated by comparing the 10-Year Treasury to the 1-Year Treasury and comparing the delta to different measurements to describe the shape of the slope. 
 
 The website used to scrape this information is "https://ustreasuries.online"
+
+![image alt](https://github.com/aarern/todays-yield-curve/blob/a56fd3da4e331eba01418b0ec601b9cc4b89fe4e/images/cur1.png)
 
 Steps to setting up the Excel file:
 1. Macros are not enabled for this workbook so you can just download the spreadsheet and save it down to a folder where you won't move it.
@@ -11,23 +13,23 @@ Steps to setting up the Excel file:
 4. Go to trusted locations
 5. Click "Add New Location"
 6. Click "Browse"
-7. Locate the folder the Excel file is in and hit "OK"
-8. Check the box that says "Subfolders of this location are also trusted"
+7. Locate the folder the Excel file is in and hit "OK."
+8. Check the box that says "Subfolders of this location are also trusted."
 9. Hit "OK"
 10. Don't change the name of the file or the worksheets
 
 Steps to setting up the code:
-*install necessary pips* 
+*Install necessary pip* 
 1. pip install selenium webdriver-manager
-2. install pandas 
+2. Install pandas 
 3. pip install xlsxwriter
 
-1. Save the file down in the same location as the Excel file
-2. Copy the location of the Excel file in the folder (in the file explorer highlight the Excel file then hit (Ctrl Shift C) to copy the location)
+1. Save the file in the same location as the Excel file
+2. Copy the location of the Excel file in the folder (in the file explorer, highlight the Excel file, then hit Ctrl Shift C to copy the location)
 3. Open the coding environment
 4. Go to ln 123
 5. Replace the r"" with the location of the Excel file
 6. Ensure only one set of quotes is around the location
 7. Save
-8. Make sure the Excel file is not open when you run the script otherwise it won't work
+8. Make sure the Excel file is not open when you run the script, otherwise, it won't work
 9. Run the script every time you need to update the yield curve
